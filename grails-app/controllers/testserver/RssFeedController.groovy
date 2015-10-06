@@ -23,9 +23,8 @@ class RssFeedController {
         feed.save()
 
         rss.channel.item.each {
-            Link link = new Link( title: it.title, link: it.link, feed: feed )
-            link.save()
-            println link
+            def link = new Link( title: it.title.text(), link: it.link.text(), feed: feed )
+            link.save(flush: true, failOnError: true)
         }
 
         redirect( view: "show", id: feed.id )
@@ -42,10 +41,8 @@ class RssFeedController {
         def criteria = Link.createCriteria()
 
         def links = criteria.list {
-            //eq( 'feed', feed )
+            eq( 'feed', feed )
         }
-
-        links = Link.list()
 
         [ feed: feed, links: links ]
     }
